@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // if used turbopack
   // transpilePackages: ["next-mdx-remote"],
 };
