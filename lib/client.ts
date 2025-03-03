@@ -8,6 +8,6 @@ export const client = createClient<AppRouter>({
 function getBaseUrl() {
   // 👇 Adjust for wherever you deploy
   if (process.env.NEXT_PUBLIC_CLIENT_SERVER_URL)
-    return `https://${process.env.NEXT_PUBLIC_CLIENT_SERVER_URL}`;
+    return `${process.env.NEXT_PUBLIC_CLIENT_SERVER_URL}`;
   return `http://localhost:3000`;
 }
