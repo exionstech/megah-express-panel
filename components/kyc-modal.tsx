@@ -1,5 +1,7 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 
@@ -10,6 +12,7 @@ const KycModal = ({
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const router = useRouter();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -38,12 +41,13 @@ const KycModal = ({
               <p className="text-center mb-6">
                 Complete your kyc verification process.After verification you
                 can apply for creating new{" "}
-                <span className="text-indigo-400 px-1">Megha</span>{" "}
-                <span className="text-red-500 pr-1">Express</span> HUB account.
+                Megha Express HUB account.
               </p>
               <div className="flex gap-4">
                 <Button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    router.push('/')
+                  }}
                   className="bg-transparent border hover:bg-black/20  transition-colors text-black font-medium w-full py-2 rounded-lg"
                 >
                   Nah, go back
