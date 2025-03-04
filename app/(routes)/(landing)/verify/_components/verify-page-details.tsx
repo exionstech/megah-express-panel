@@ -18,52 +18,51 @@ const VerifyKycPageDetails = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
 
-    // Handle redirection if user is not authenticated
     useEffect(() => {
         if (!isLoading && !user) {
-            router.replace('/onboarding');
+            router.replace("/onboarding");
         }
     }, [user, isLoading, router]);
 
-    // Open the modal when the component mounts
     useEffect(() => {
         setIsModalOpen(true);
     }, []);
 
-    // const { mutate, isPending } = useMutation({
-    //     mutationFn: async (name: string) => {
-    //         const res = await api.post("/check/create", { name })
-    //         if (res.status !== 200) throw new Error("Failed to create event")
-    //         const json = res.data
-    //         if (!json.success)
-    //             throw new Error(json.message || "Failed to create event")
-    //         return json
-    //     },
-    //     onSuccess: () => {
-    //         toast.success({
-    //             text: "Event created successfully",
-    //         });
-    //     },
-    //     onError: (error) => toast.error({
-    //         text: error.message || "Failed to create event",
-    //     }),
-    // });
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (name: string) => {
+            if (!user) throw new Error("User is not authenticated");
+            const res = await api(user.clerkId).post("/check/create", { name });
+            if (res.status !== 200) throw new Error("Failed to create event");
+            const json = res.data;
+            if (!json.success)
+                throw new Error(json.message || "Failed to create event");
+            return json;
+        },
+        onSuccess: () => {
+            toast.success({
+                text: "Event created successfully",
+            });
+        },
+        onError: (error) =>
+            toast.error({
+                text: error.message || "Failed to create event",
+            }),
+    });
 
-    // const handleSubmit = (e: any) => {
-    //     e.preventDefault();
-    //     mutate(inputValue);
-    // };
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        mutate(inputValue);
+    };
 
-    // Show loading state while checking authentication
+
     if (isLoading) {
         return (
-            <div className='w-full h-full flex items-center justify-center min-h-screen'>
-                <Loader className='size-8 shrink-0 animate-spin' />
+            <div className="w-full h-full flex items-center justify-center min-h-screen">
+                <Loader className="size-8 shrink-0 animate-spin" />
             </div>
         );
     }
 
-    // Don't render the page content if user is not authenticated
     if (!user && !isLoading) {
         return null;
     }
@@ -75,7 +74,7 @@ const VerifyKycPageDetails = () => {
                 Please complete your verification process.
             </p>
 
-            {/* <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
                 <Input
                     type="text"
                     placeholder="Enter your KYC info"
@@ -83,7 +82,7 @@ const VerifyKycPageDetails = () => {
                     onChange={(e) => setInputValue(e.target.value)}
                 />
                 <Button type="submit">Submit</Button>
-            </form> */}
+            </form>
 
             <KycModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
         </MaxWidthWrapper>
