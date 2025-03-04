@@ -31,7 +31,6 @@ export function UserNav({ avtarBig }: UserNavProps) {
 
   const { user, isLoading } = useUser()
 
-  console.log(user);
   if (user) {
     return (
       <DropdownMenu>
