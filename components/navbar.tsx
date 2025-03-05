@@ -1,4 +1,3 @@
-
 import { ModeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,16 +33,19 @@ export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
       <Image
-        src={"/fav.svg"}
+        src={"/logo-dark.svg"}
         alt="logo"
         width={40}
         height={40}
-        className="w-8 h-auto text-muted-foreground"
+        className="w-32 h-auto text-muted-foreground dark:hidden"
       />
-      <h2 className="text-md font-bold font-code text-blue-600">
-        <span className="text-red-500 mr-1">Megha</span>
-        Express
-      </h2>
+      <Image
+        src={"/logo-light.svg"}
+        alt="logo"
+        width={40}
+        height={40}
+        className="w-32 h-auto text-muted-foreground hidden dark:block"
+      />
     </Link>
   );
 }

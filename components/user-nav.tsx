@@ -1,6 +1,6 @@
-"use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+"use client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,52 +9,79 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useUser } from "@/hooks/use-user"
-import { cn } from "@/lib/utils"
-import { useClerk } from "@clerk/nextjs"
+} from "@/components/ui/dropdown-menu";
+import { useUser } from "@/hooks/use-user";
+import { cn } from "@/lib/utils";
+import { useClerk } from "@clerk/nextjs";
 
-import { useRouter } from "next/navigation"
-import { Skeleton } from "./ui/skeleton"
-
-
+import { useRouter } from "next/navigation";
+import { Skeleton } from "./ui/skeleton";
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 
 interface UserNavProps {
-  avtarBig?: boolean
+  avtarBig?: boolean;
 }
 
-
 export function UserNav({ avtarBig }: UserNavProps) {
-  const { signOut } = useClerk()
+  const { signOut } = useClerk();
+  const router = useRouter();
+  const { user, isLoading } = useUser();
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
-  const router = useRouter()
+  useEffect(() => {
+    if (user && isSigningOut) {
+      setIsSigningOut(false);
+    }
+  }, [user, isSigningOut]);
 
-  const { user, isLoading } = useUser()
+  const handleSignOut = useCallback(async () => {
+    setIsSigningOut(true);
+    
+    try {
+      await signOut(() => {
+        window.location.href = "/";
+      });
+    } catch (error) {
+      console.error("Error signing out:", error);
+      setIsSigningOut(false);
+    }
+  }, [signOut]);
 
-  if (user) {
-    return (
-      <DropdownMenu>
+
+  if (isLoading) {
+    return <Skeleton className="w-8 h-8 rounded-full bg-gray-400/40" />;
+  }
+
+
+  const showUser = user && !isSigningOut;
+
+  return (
+    <DropdownMenu>
+      {showUser ? (
         <DropdownMenuTrigger asChild>
-          {isLoading ? (
-            <Skeleton className="w-8 h-8 rounded-full" />
-          ) : (
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className={cn("h-8 w-8",
-                avtarBig && "h-10 w-10"
-              )}>
-                <AvatarImage
-                  src={user?.avatar || ""}
-                  alt={user?.name?.slice(0, 2)?.toUpperCase() || "ES"}
-                  className="object-contain"
-                />
-                <AvatarFallback>
-                  {user?.name?.slice(0, 2)?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          )}
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Avatar className={cn("h-8 w-8", avtarBig && "h-10 w-10")}>
+              <AvatarImage
+                src={user?.avatar || ""}
+                alt={user?.name?.slice(0, 2)?.toUpperCase() || "ES"}
+                className="object-contain"
+              />
+              <AvatarFallback>
+                {user?.name?.slice(0, 2)?.toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
         </DropdownMenuTrigger>
+      ) : (
+        <Link href={"/sign-up"}>
+          <Button size={"sm"} className="active:scale-95">
+            Sign Up
+          </Button>
+        </Link>
+      )}
 
+      {showUser && (
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
@@ -69,27 +96,18 @@ export function UserNav({ avtarBig }: UserNavProps) {
             <DropdownMenuItem onClick={() => router.push("/")}>
               Home
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/dashboard/mybookings")}>
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/mybookings")}
+            >
               Dashboard
             </DropdownMenuItem>
-            {/* <DropdownMenuItem
-              onClick={() => router.push("/dashboard/myevents")}
-            >
-              Your Events
-            </DropdownMenuItem>
-            {(user?.role === "SUPERADMIN" || user?.role === "ADMIN") && (
-              <DropdownMenuItem
-                onClick={() => router.push("/dashboard/events")}
-              >
-                Manage Events
-              </DropdownMenuItem>
-            )} */}
-
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOut()}>Log out</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
+            {isSigningOut ? "Signing out..." : "Log out"}
+          </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
-    )
-  }
+      )}
+    </DropdownMenu>
+  );
 }

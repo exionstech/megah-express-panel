@@ -4,7 +4,7 @@ import VerifyKycPageDetails from './_components/verify-page-details';
 
 export const metadata: Metadata = {
 
-    title: "Verify KYC | Megha Express",
+    title: "Verify KYC | Megha Express Panel",
 };
 
 

@@ -1,9 +1,8 @@
 "use client";
 
-import KycModal from "@/components/kyc-modal";
+import KycModal from "@/app/(routes)/(landing)/verify/_components/kyc-modal";
 import { MaxWidthWrapper } from "@/components/shared/max-wrapper";
 import { useUser } from "@/hooks/use-user";
-import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
@@ -11,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { toast } from "@pheralb/toast";
+import LoaderPage from "@/components/shared/loader";
 
 const VerifyKycPageDetails = () => {
     const router = useRouter();
@@ -57,9 +57,7 @@ const VerifyKycPageDetails = () => {
 
     if (isLoading) {
         return (
-            <div className="w-full h-full flex items-center justify-center min-h-screen">
-                <Loader className="size-8 shrink-0 animate-spin" />
-            </div>
+           <LoaderPage />
         );
     }
 

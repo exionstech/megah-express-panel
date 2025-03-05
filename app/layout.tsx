@@ -21,7 +21,7 @@ const monoFont = Space_Mono({
 
 export const metadata: Metadata = {
 
-  title: "Panel | Megha Express",
+  title: "Megha Express Panel",
   metadataBase: new URL("https://meghaexpress.in"),
   description: "Admin panel for Megha Express transport services.",
   icons: {
