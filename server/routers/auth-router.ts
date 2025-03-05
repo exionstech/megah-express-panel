@@ -24,7 +24,6 @@ export const authRouter = j.router({
         email: auth.emailAddresses[0]?.emailAddress ?? "",
         name: auth.fullName ?? "",
         avatar: auth?.imageUrl,
-        lastLogin: auth.lastSignInAt ? new Date(auth.lastSignInAt) : null,
       });
 
       return c.json({ isSynced: true });
