@@ -19,7 +19,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                     className="relative z-20 flex items-center text-lg font-medium"
                 >
                     <Image
-                        src="/logo.svg"
+                        src="/logo-light.svg"
                         alt="Logo"
                         width={40}
                         height={40}

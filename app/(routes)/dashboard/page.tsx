@@ -1,5 +1,6 @@
 "use client"
 
+import LoaderPage from '@/components/shared/loader'
 import { useUser } from '@/hooks/use-user'
 import { Loader } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -18,9 +19,7 @@ const DashboardPage = () => {
 
   if (isLoading) {
     return (
-      <div className='w-full h-full flex items-center justify-center min-h-screen'>
-        <Loader className='size-8 shrink-0 animate-spin' />
-      </div>
+     <LoaderPage/>
     )
   }
 

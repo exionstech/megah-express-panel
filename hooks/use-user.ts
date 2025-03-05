@@ -1,7 +1,10 @@
 import { client } from "@/lib/client";
-import { useQuery } from "@tanstack/react-query";
+import { toast } from "@pheralb/toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useUser = () => {
+  const queryClient = useQueryClient();
+
   const {
     data: user,
     isLoading,
@@ -15,16 +18,18 @@ export const useUser = () => {
         if (data && data.user) {
           return data.user;
         }
-
         return null;
       } catch (error) {
         console.error("Error fetching user:", error);
-
+        toast.error({
+          text: "Something went wrong",
+        });
         return null;
       }
     },
     retry: 1,
   });
+
 
   return { user, isLoading, error };
 };
