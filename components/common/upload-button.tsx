@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Upload, X, File, Pause } from "lucide-react";
+import { X, File, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useUploadThing } from "@/utils/upload-helper";
