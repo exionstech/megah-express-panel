@@ -6,6 +6,7 @@ import { Loader2, Upload, X, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useUploadThing } from "@/utils/upload-helper";
+import CustomIcon from "../shared/custom-icon";
 
 // Define the endpoint type based on your file router
 type EndpointKey = keyof OurFileRouter;
@@ -95,15 +96,15 @@ const ImageUploader = ({
       {!file ? (
         <div
           {...getRootProps()}
-          className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors"
+          className="border-[2px] border-dashed border-brandblue dark:border-white rounded-md p-6 flex flex-col gap-2 items-center justify-center cursor-pointer transition-colors"
         >
           <input {...getInputProps()} />
-          <Upload className="h-10 w-10 text-blue-500 mb-2" />
+          <CustomIcon src={"uploader.svg"} size={40}/>
           <p className="text-sm text-center">
             Drag your file(s) to start uploading
           </p>
           <p className="text-xs text-center text-muted-foreground mt-1">OR</p>
-          <Button variant="outline" size="sm" className="mt-2">
+          <Button variant="outline" size="sm" className="mt-2 text-brandblue border-brandblue dark:text-white dark:border-white border-[2px] font-semibold">
             Browse files
           </Button>
           <p className="text-xs text-center text-muted-foreground mt-2">
