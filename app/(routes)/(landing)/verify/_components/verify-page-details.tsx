@@ -24,12 +24,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import ImageUploader from "@/components/common/upload-button";
 import Image from "next/image";
-import UploaderSmallButton from "@/components/common/upload-small-button";
 import CustomIcon from "@/components/shared/custom-icon";
-import { ChevronRight } from "lucide-react";
+import { Loader2, Save, CircleX } from "lucide-react";
 import { PhoneInput } from "@/components/ui/phone-number-input";
+import VerifySuccess from "../../verify-success/page";
+import ImageUploader from "@/components/common/file-upload-zone";
 
 const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
@@ -72,36 +72,25 @@ const VerifyKycPageDetails = () => {
   const form = useForm<KycFormValues>({
     resolver: zodResolver(kycFormSchema),
     defaultValues: {
-      profilePhoto:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      phone: "+918389849446",
+      profilePhoto: user?.avatar || "",
+      phone: "",
       name: user?.name || "",
       email: user?.email || "",
-      aadhaarNumber: "123456789123",
-      aadhaarFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      aadhaarBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      panNumber: "HBQPD3089G",
-      panFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      panBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      voterIdNumber: "123456789123",
-      voterIdFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      voterIdBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      drivingLicenseNumber: "123456789123",
-      drivingLicenseFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      drivingLicenseBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      passportNumber: "123456789123",
-      passportFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
-      passportBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
+      aadhaarNumber: "",
+      aadhaarFront: "",
+      aadhaarBack: "",
+      panNumber: "",
+      panFront: "",
+      panBack: "",
+      voterIdNumber: "",
+      voterIdFront: "",
+      voterIdBack: "",
+      drivingLicenseNumber: "",
+      drivingLicenseFront: "",
+      drivingLicenseBack: "",
+      passportNumber: "",
+      passportFront: "",
+      passportBack: "",
     },
   });
 
@@ -109,18 +98,27 @@ const VerifyKycPageDetails = () => {
     if (!isLoading && !user) {
       router.replace("/onboarding");
     }
-  }, [user, isLoading, router]);
+    if (!isLoading && user) {
+      form.setValue("name", user.name || "");
+      form.setValue("email", user.email || "");
+      form.setValue("profilePhoto", user.avatar || "");
+    }
+  }, [user, isLoading, router, form]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: KycFormValues) => {
       if (!user) throw new Error("User is not authenticated");
       const apiData = {
-        id: user.id,
         name: data.name,
         email: data.email,
         mobile: data.phone,
         avatar: data.profilePhoto,
         kycDocuments: {
+          aadharCardNo: data.aadhaarNumber,
+          panCardNo: data.panNumber,
+          voterCardNo: data.voterIdNumber || "",
+          passportNo: data.passportNumber || "",
+          drivingLicenceNo: data.drivingLicenseNumber || "",
           aadharCardFront: data.aadhaarFront,
           aadharCardBack: data.aadhaarBack,
           panCardFront: data.panFront,
@@ -145,12 +143,12 @@ const VerifyKycPageDetails = () => {
       toast.success({
         text: "KYC verification submitted successfully",
       });
-      router.push("/dashboard");
+      return <VerifySuccess />;
     },
     onError: (error) => {
       setIsSubmitting(false);
       toast.error({
-        text: error.message || "Failed to submit KYC details",
+        text: "Failed to submit KYC details",
       });
     },
   });
@@ -178,19 +176,30 @@ const VerifyKycPageDetails = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-14">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="w-full flex flex-col md:flex-row gap-6">
             {/* Profile Photo Section */}
             <div className="w-full md:w-[60%] flex flex-col md:flex-row gap-6 md:gap-10  h-fit">
-              <div className="w-[50%] md:w-[40%] aspect-square overflow-hidden border-[2px] border-dashed border-brandblue rounded-lg flex items-center justify-center">
+              <div className="w-[50%] md:w-[40%] aspect-square overflow-hidden border-[2px] border-dashed border-brandblue rounded-lg flex items-center justify-center relative">
                 {form.watch("profilePhoto") ? (
-                  <Image
-                    src={form.watch("profilePhoto")}
-                    alt="Profile"
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-cover"
-                  />
+                  <>
+                    <Image
+                      src={form.watch("profilePhoto")}
+                      alt="Profile"
+                      width={200}
+                      height={200}
+                      className="w-full h-full object-cover"
+                    />
+                    <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        className="absolute top-1 right-1 h-8 w-8 bg-brandred hover:bg-brandred/80"
+                        
+                    >
+                      <CircleX className="h-5 w-5" color="white"/>
+                    </Button>
+                  </>
                 ) : (
                   <div className="text-center p-4">
                     <CustomIcon src={"/kyc/kyc-profile.svg"} size={50} />
@@ -220,14 +229,7 @@ const VerifyKycPageDetails = () => {
                         *The image should match with other KYC documents.
                       </div>
                       <div className="w-full mt-3 flex md:gap-5 gap-2 flex-col">
-                        <FormControl>
-                          <UploaderSmallButton
-                            endpoint="imageUploader"
-                            onUploadComplete={(url) =>
-                              form.setValue("profilePhoto", url)
-                            }
-                          />
-                        </FormControl>
+                        <FormControl></FormControl>
                         <FormDescription>
                           Please upload square image, size less than 100KB
                         </FormDescription>
@@ -238,13 +240,10 @@ const VerifyKycPageDetails = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-6 w-full md:w-[40%]">
+            <div className="flex flex-col gap-2 w-full md:w-[40%]">
+              <h2 className="text-lg font-semibold">Basic Details*</h2>
               {/* Name Section */}
               <div className="flex flex-col">
-                <h2 className="text-lg font-semibold mb-4">Name*</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Please enter your name below for completing your KYC.
-                </p>
                 <FormField
                   control={form.control}
                   name="name"
@@ -261,10 +260,6 @@ const VerifyKycPageDetails = () => {
               </div>
               {/* Email Section */}
               <div className="flex flex-col">
-                <h2 className="text-lg font-semibold mb-4">Email*</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Please enter your email below for completing your KYC.
-                </p>
                 <FormField
                   control={form.control}
                   name="email"
@@ -272,10 +267,7 @@ const VerifyKycPageDetails = () => {
                     <FormItem>
                       <FormLabel>Email*</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Enter your email"
-                          {...field}
-                        />
+                        <Input placeholder="Enter your email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -284,10 +276,6 @@ const VerifyKycPageDetails = () => {
               </div>
               {/* mobile number section */}
               <div className="flex flex-col">
-                <h2 className="text-lg font-semibold mb-4">Mobile Number*</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Please enter your mobile number below for completing your KYC.
-                </p>
                 <FormField
                   control={form.control}
                   name="phone"
@@ -671,13 +659,11 @@ const VerifyKycPageDetails = () => {
               disabled={isPending || isSubmitting}
               className="px-10 bg-brandred hover:bg-brandred/70 font-semibold"
             >
+              {isPending ? "Applying" : "Apply"}
               {isPending ? (
-                "Submitting..."
+                <Loader2 className="ml-2 size-4 shrink-0 animate-spin" />
               ) : (
-                <div className="flex items-center gap-2">
-                  Submit
-                  <ChevronRight />
-                </div>
+                <Save className="ml-2 size-4 shrink-0" />
               )}
             </Button>
           </div>

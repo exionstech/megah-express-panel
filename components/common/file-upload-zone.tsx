@@ -105,6 +105,7 @@ const ImageUploader = ({
           </p>
           <p className="text-xs text-center text-muted-foreground mt-1">OR</p>
           <Button
+          type="button"
             variant="outline"
             size="sm"
             className="mt-2 text-brandblue border-brandblue dark:text-white dark:border-white border-[2px] font-semibold hover:text-brandblue"
@@ -127,6 +128,7 @@ const ImageUploader = ({
             </div>
             <div className="flex gap-2">
               <Button
+              type="button"
                 size="icon"
                 variant="ghost"
                 className="h-6 w-6 rounded-full border-[2px] border-brandred bg-brandred/10"
@@ -135,6 +137,7 @@ const ImageUploader = ({
                 <X className="h-4 w-4" color="red" />
               </Button>
               <Button
+              type="button"
                 size="icon"
                 variant="ghost"
                 className="h-6 w-6 rounded-full border-[2px] border-brandblack bg-brandblack/10"
@@ -165,6 +168,7 @@ const ImageUploader = ({
 
           <div className="flex items-center">
             <Button
+            type="button"
               size="icon"
               variant="ghost"
               className="h-6 w-6 rounded-full border-[2px] border-brandred bg-brandred/10"
