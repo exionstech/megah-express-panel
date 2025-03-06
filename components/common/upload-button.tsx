@@ -2,13 +2,12 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Upload, X, File } from "lucide-react";
+import { Loader2, Upload, X, File, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useUploadThing } from "@/utils/upload-helper";
 import CustomIcon from "../shared/custom-icon";
 
-// Define the endpoint type based on your file router
 type EndpointKey = keyof OurFileRouter;
 
 interface ImageUploaderProps {
@@ -32,7 +31,11 @@ const ImageUploader = ({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploaded, setIsUploaded] = useState(false);
 
-  const { startUpload, isUploading: isUploadingState, routeConfig } = useUploadThing(endpoint, {
+  const {
+    startUpload,
+    isUploading: isUploadingState,
+    routeConfig,
+  } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
       if (res && res[0]) {
         onUploadComplete(res[0].url);
@@ -50,32 +53,29 @@ const ImageUploader = ({
     },
     onUploadProgress: (progress) => {
       setUploadProgress(progress as number);
-    }
+    },
   });
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles && acceptedFiles[0]) {
-      const selectedFile = acceptedFiles[0];
-      setFile(selectedFile);
-      
-      // Create preview for image files
-      if (selectedFile.type.includes("image")) {
-        const objectUrl = URL.createObjectURL(selectedFile);
-        setPreview(objectUrl);
-      } else {
-        setPreview(null);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles && acceptedFiles[0]) {
+        const selectedFile = acceptedFiles[0];
+        setFile(selectedFile);
+        if (selectedFile.type.includes("image")) {
+          const objectUrl = URL.createObjectURL(selectedFile);
+          setPreview(objectUrl);
+        } else {
+          setPreview(null);
+        }
+        startUpload([selectedFile]);
       }
-      
-      // Start upload
-      startUpload([selectedFile]);
-    }
-  }, [startUpload]);
-
-  // Define acceptable file types
+    },
+    [startUpload]
+  );
   const acceptableFileTypes = {
     "image/png": [".png"],
     "image/jpeg": [".jpg", ".jpeg"],
-    "application/pdf": [".pdf"]
+    "application/pdf": [".pdf"],
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -99,12 +99,16 @@ const ImageUploader = ({
           className="border-[2px] border-dashed border-brandblue dark:border-white rounded-md p-6 flex flex-col gap-2 items-center justify-center cursor-pointer transition-colors"
         >
           <input {...getInputProps()} />
-          <CustomIcon src={"uploader.svg"} size={40}/>
+          <CustomIcon src={"uploader.svg"} size={40} />
           <p className="text-sm text-center">
             Drag your file(s) to start uploading
           </p>
           <p className="text-xs text-center text-muted-foreground mt-1">OR</p>
-          <Button variant="outline" size="sm" className="mt-2 text-brandblue border-brandblue dark:text-white dark:border-white border-[2px] font-semibold">
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2 text-brandblue border-brandblue dark:text-white dark:border-white border-[2px] font-semibold hover:text-brandblue"
+          >
             Browse files
           </Button>
           <p className="text-xs text-center text-muted-foreground mt-2">
@@ -112,55 +116,61 @@ const ImageUploader = ({
           </p>
         </div>
       ) : isUploading ? (
-        <div className="border rounded-md p-4">
-          <div className="flex items-center">
-            <span className="text-sm font-medium">Uploading...</span>
-            <span className="ml-auto text-xs text-muted-foreground">
-              {uploadProgress}% • {Math.round((file.size / 1024) * 10) / 10}KB remaining
-            </span>
+        <div className="border rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2">
+              <span className="text-sm font-semibold">Uploading...</span>
+              <span className="ml-auto text-xs text-muted-foreground">
+                {uploadProgress}% • {Math.round((file.size / 1024) * 10) / 10}KB
+                remaining
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6 rounded-full border-[2px] border-brandred bg-brandred/10"
+                onClick={removeFile}
+              >
+                <X className="h-4 w-4" color="red" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6 rounded-full border-[2px] border-brandblack bg-brandblack/10"
+                disabled
+              >
+                <Pause className="h-4 w-4" color="#353535" />
+              </Button>
+            </div>
           </div>
           <div className="mt-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-blue-500 rounded-full" 
+            <div
+              className="h-full bg-blue-500 rounded-full"
               style={{ width: `${uploadProgress}%` }}
             />
           </div>
-          <div className="flex justify-end mt-2">
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="h-6 w-6 rounded-full" 
-              onClick={removeFile}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="h-6 w-6 rounded-full ml-1"
-              disabled
-            >
-              <Loader2 className="h-4 w-4 animate-spin" />
-            </Button>
-          </div>
         </div>
       ) : (
-        <div className="border rounded-md p-4">
-          <div className="flex items-center">
-            <File className="h-5 w-5 text-red-500 mr-2" />
-            <span className="text-sm font-medium">{file.name}</span>
-            <span className="ml-auto text-xs text-muted-foreground">
-              {Math.round((file.size / 1024) * 10) / 10}KB
-            </span>
+        <div className="border rounded-xl p-4 flex justify-between items-center">
+          <div className="flex gap-2">
+            <File className="h-8 w-8 text-brandred" />
+            <div className="flex flex-col gap-[2px]">
+              <span className="text-sm font-semibold">{file.name}</span>
+              <span className="text-xs text-muted-foreground">
+                {Math.round((file.size / 1024) * 10) / 10}KB
+              </span>
+            </div>
           </div>
-          <div className="flex justify-end mt-2">
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="h-6 w-6 rounded-full" 
+
+          <div className="flex items-center">
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-6 w-6 rounded-full border-[2px] border-brandred bg-brandred/10"
               onClick={removeFile}
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" color="red"/>
             </Button>
           </div>
         </div>
