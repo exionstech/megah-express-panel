@@ -67,9 +67,9 @@ const VerifyKycPageDetails = () => {
 
     return (
         <MaxWidthWrapper className="min-h-screen py-6">
-            <h1 className="text-3xl font-bold mb-4">Verify KYC</h1>
+            <h1 className="text-3xl font-bold mb-4">KYC Verification Process</h1>
             <p className="text-muted-foreground text-lg">
-                Please complete your verification process.
+            Please complete your verification process.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
