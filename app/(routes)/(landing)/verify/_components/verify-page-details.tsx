@@ -73,35 +73,35 @@ const VerifyKycPageDetails = () => {
     resolver: zodResolver(kycFormSchema),
     defaultValues: {
       profilePhoto:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       phone: "+918389849446",
       name: user?.name || "",
       email: user?.email || "",
       aadhaarNumber: "123456789123",
       aadhaarFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       aadhaarBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       panNumber: "HBQPD3089G",
       panFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       panBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       voterIdNumber: "123456789123",
       voterIdFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       voterIdBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       drivingLicenseNumber: "123456789123",
       drivingLicenseFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       drivingLicenseBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       passportNumber: "123456789123",
       passportFront:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
       passportBack:
-        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDwj2OZMyqLObpBqDtUwKIPn1rQliuYNvMZWsf",
+        "https://2zek8lj0x9.ufs.sh/f/x6c1qp2r3WfDqToy46LoKaLBewCOMUvbVz14p0Pim7RcHxEQ",
     },
   });
 
@@ -181,8 +181,8 @@ const VerifyKycPageDetails = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-14">
           <div className="w-full flex flex-col md:flex-row gap-6">
             {/* Profile Photo Section */}
-            <div className="w-full md:w-[60%] flex flex-col md:flex-row gap-6 md:gap-10">
-              <div className="w-[50%] md:w-[20%] aspect-square overflow-hidden border-[2px] border-dashed border-brandblue rounded-lg flex items-center justify-center">
+            <div className="w-full md:w-[60%] flex flex-col md:flex-row gap-6 md:gap-10  h-fit">
+              <div className="w-[50%] md:w-[40%] aspect-square overflow-hidden border-[2px] border-dashed border-brandblue rounded-lg flex items-center justify-center">
                 {form.watch("profilePhoto") ? (
                   <Image
                     src={form.watch("profilePhoto")}
@@ -197,25 +197,15 @@ const VerifyKycPageDetails = () => {
                   </div>
                 )}
               </div>
-              <div className="w-full md:w-[80%]">
+              <div className="w-full md:w-[60%]">
                 <FormField
                   control={form.control}
                   name="profilePhoto"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="w-full flex md:gap-5 gap-2 flex-col md:flex-row md:items-center">
-                        <FormControl>
-                          <UploaderSmallButton
-                            endpoint="imageUploader"
-                            onUploadComplete={(url) =>
-                              form.setValue("profilePhoto", url)
-                            }
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Please upload square image, size less than 100KB
-                        </FormDescription>
-                      </div>
+                      <h2 className="text-lg font-semibold mb-4">
+                        Profile Photo*
+                      </h2>
                       <div className="text-xs mt-3">
                         *The face should be clearly visible.
                       </div>
@@ -229,6 +219,19 @@ const VerifyKycPageDetails = () => {
                       <div className="text-xs">
                         *The image should match with other KYC documents.
                       </div>
+                      <div className="w-full mt-3 flex md:gap-5 gap-2 flex-col">
+                        <FormControl>
+                          <UploaderSmallButton
+                            endpoint="imageUploader"
+                            onUploadComplete={(url) =>
+                              form.setValue("profilePhoto", url)
+                            }
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Please upload square image, size less than 100KB
+                        </FormDescription>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -236,75 +239,73 @@ const VerifyKycPageDetails = () => {
               </div>
             </div>
             <div className="flex flex-col gap-6 w-full md:w-[40%]">
+              {/* Name Section */}
+              <div className="flex flex-col">
+                <h2 className="text-lg font-semibold mb-4">Name*</h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Please enter your name below for completing your KYC.
+                </p>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name*</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/* Email Section */}
+              <div className="flex flex-col">
+                <h2 className="text-lg font-semibold mb-4">Email*</h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Please enter your email below for completing your KYC.
+                </p>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email*</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               {/* mobile number section */}
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold mb-4">Mobile Number*</h2>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Please enter your mobile number below for completing your
-                    KYC.
-                  </p>
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Mobile Number*</FormLabel>
-                        <FormControl>
-                          <PhoneInput
-                            placeholder="Enter your mobile number"
-                            {...field}
-                            defaultCountry="IN"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                {/* Name Section */}
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold mb-4">Name*</h2>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Please enter your name below for completing your KYC.
-                  </p>
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter your name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                {/* Email Section */}
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-semibold mb-4">Email*</h2>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Please enter your email below for completing your KYC.
-                  </p>
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email*</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your email"
-                            {...field}
-                            disabled
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  </div>  
+              <div className="flex flex-col">
+                <h2 className="text-lg font-semibold mb-4">Mobile Number*</h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Please enter your mobile number below for completing your KYC.
+                </p>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Mobile Number*</FormLabel>
+                      <FormControl>
+                        <PhoneInput
+                          placeholder="Enter your mobile number"
+                          {...field}
+                          defaultCountry="IN"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </div>
 
