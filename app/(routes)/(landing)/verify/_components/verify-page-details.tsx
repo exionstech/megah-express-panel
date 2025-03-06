@@ -7,14 +7,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MaxWidthWrapper } from "@/components/shared/max-wrapper";
 import { useUser } from "@/hooks/use-user";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "@pheralb/toast";
 import api from "@/lib/api";
 import LoaderPage from "@/components/shared/loader";
-import { generateReactHelpers } from "@uploadthing/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { OurFileRouter } from "@/app/api/uploadthing/core";
 import {
   Form,
   FormControl,
@@ -28,10 +26,14 @@ import Image from "next/image";
 import CustomIcon from "@/components/shared/custom-icon";
 import { Loader2, Save, CircleX } from "lucide-react";
 import { PhoneInput } from "@/components/ui/phone-number-input";
-import VerifySuccess from "../../verify-success/page";
 import ImageUploader from "@/components/common/file-upload-zone";
+import WaitingScreen from "./waiting-screen";
 
-const { useUploadThing } = generateReactHelpers<OurFileRouter>();
+type kycResponseData = {
+  success: boolean;
+  data: User;
+  message: string;
+};
 
 const kycFormSchema = z.object({
   profilePhoto: z.string().min(1, "Profile photo is required"),
@@ -69,6 +71,7 @@ const VerifyKycPageDetails = () => {
   const router = useRouter();
   const { user, isLoading } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<KycFormValues>({
     resolver: zodResolver(kycFormSchema),
     defaultValues: {
@@ -104,6 +107,24 @@ const VerifyKycPageDetails = () => {
       form.setValue("profilePhoto", user.avatar || "");
     }
   }, [user, isLoading, router, form]);
+
+  const { data: kycData, isLoading: isKycLoading } = useQuery<kycResponseData>({
+    queryKey: ["get-kyc-details"],
+    queryFn: async () => {
+      if (!user?.clerkId) throw new Error("User ID is required");
+      const response = await api(user.clerkId).get(`/kyc/getdetails`);
+      if (response.status !== 200) {
+        toast.error({
+          text: response.data.message || "Failed to fetch KYC details",
+        });
+      } else {
+        toast.success({
+          text: "Your KYC details on under review",
+        });
+      }
+      return response.data;
+    },
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: KycFormValues) => {
@@ -143,12 +164,12 @@ const VerifyKycPageDetails = () => {
       toast.success({
         text: "KYC verification submitted successfully",
       });
-      return <VerifySuccess />;
+      return <WaitingScreen />;
     },
     onError: (error) => {
       setIsSubmitting(false);
       toast.error({
-        text: "Failed to submit KYC details",
+        text: error.message || "Failed to submit KYC details",
       });
     },
   });
@@ -158,11 +179,17 @@ const VerifyKycPageDetails = () => {
     mutate(data);
   };
 
-  if (isLoading) {
+  const allLoading = isLoading || isKycLoading;
+
+  if (allLoading) {
     return <LoaderPage />;
   }
 
-  if (!user && !isLoading) {
+  if (kycData?.data.kycStatus === "APPLIED") {
+    return <WaitingScreen />;
+  }
+
+  if (!user) {
     return null;
   }
 
@@ -191,13 +218,12 @@ const VerifyKycPageDetails = () => {
                       className="w-full h-full object-cover"
                     />
                     <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="absolute top-1 right-1 h-8 w-8 bg-brandred hover:bg-brandred/80"
-                        
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="absolute top-1 right-1 h-8 w-8 bg-brandred hover:bg-brandred/80"
                     >
-                      <CircleX className="h-5 w-5" color="white"/>
+                      <CircleX className="h-5 w-5" color="white" />
                     </Button>
                   </>
                 ) : (
