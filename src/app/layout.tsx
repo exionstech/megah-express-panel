@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://meghaexpress.in"),
   description: "Admin panel for Megha Express transport services.",
   icons: {
-    icon: "/fav.svg"
+    icon: "./fav.svg"
   }
 };
 

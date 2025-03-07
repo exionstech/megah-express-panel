@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MaxWidthWrapper } from "@/components/shared/max-wrapper";
 import { useUser } from "@/hooks/use-user";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "@pheralb/toast";
 import api from "@/lib/api";
 import LoaderPage from "@/components/shared/loader";
@@ -28,12 +28,6 @@ import { Loader2, Save, CircleX } from "lucide-react";
 import { PhoneInput } from "@/components/ui/phone-number-input";
 import ImageUploader from "@/components/common/file-upload-zone";
 import WaitingScreen from "./waiting-screen";
-
-type kycResponseData = {
-  success: boolean;
-  data: User;
-  message: string;
-};
 
 const kycFormSchema = z.object({
   profilePhoto: z.string().min(1, "Profile photo is required"),
@@ -97,8 +91,12 @@ const VerifyKycPageDetails = () => {
     },
   });
 
+  if (isLoading) {
+    return <LoaderPage />;
+  }
+
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!user) {
       router.replace("/onboarding");
     }
     if (!isLoading && user) {
@@ -107,19 +105,6 @@ const VerifyKycPageDetails = () => {
       form.setValue("profilePhoto", user.avatar || "");
     }
   }, [user, isLoading, router, form]);
-
-  const { data: kycData, isLoading: isKycLoading } = useQuery<kycResponseData>({
-    queryKey: ["get-kyc-details"],
-    queryFn: async () => {
-      if (!user?.clerkId) throw new Error("User ID is required");
-      const response = await api(user.clerkId).get(`/kyc/getdetails`);
-      if (response.status !== 200)
-        toast.error({
-          text: response.data.message || "Failed to fetch KYC details",
-        });
-      return response.data;
-    },
-  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: KycFormValues) => {
@@ -174,19 +159,15 @@ const VerifyKycPageDetails = () => {
     mutate(data);
   };
 
-  const allLoading = isLoading || isKycLoading;
-
-  if (allLoading) {
-    return <LoaderPage />;
-  }
-
-  if (kycData?.data.kycStatus === "APPLIED") {
-    return <WaitingScreen />
+  if (user?.kycStatus === "APPLIED") {
+    return <WaitingScreen />;
   }
 
   if (!user) {
     return null;
   }
+
+  console.log(user);
 
   return (
     <MaxWidthWrapper className="min-h-screen py-6">
@@ -234,7 +215,7 @@ const VerifyKycPageDetails = () => {
                   render={({ field }) => (
                     <FormItem>
                       <h2 className="text-lg font-semibold mb-4">
-                        Profile Photo*
+                        Profile Photo* 
                       </h2>
                       <div className="text-xs mt-3">
                         *The face should be clearly visible.
@@ -678,7 +659,7 @@ const VerifyKycPageDetails = () => {
               type="submit"
               size="lg"
               disabled={isPending || isSubmitting}
-              className="px-10 bg-brandred hover:bg-brandred/70 font-semibold"
+              className="px-10 bg-brandred hover:bg-brandred/70 font-semibold text-white"
             >
               {isPending ? "Applying" : "Apply"}
               {isPending ? (
