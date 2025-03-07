@@ -7,7 +7,7 @@ import React from "react";
 
 const WaitingScreen = () => {
   return (
-    <MaxWidthWrapper className="min-h-screen py-6">
+    <MaxWidthWrapper className="min-h-[90vh] py-6">
       <div className="flex flex-col items-center mt-10 justify-center">
         <Image
           src="/kyc/kyc-succes.png"
@@ -23,8 +23,12 @@ const WaitingScreen = () => {
           you as soon as it’s done. This usually takes 2-3 business days, so sit
           back and relax—we’ve got you covered!
         </p>
-        <Link href="/dashboard">
-          <Button className="mt-4">Go to Dashboard</Button>
+        <Link
+          target="_blank"
+          href="https://meghaexpress.in/contact-us">
+          <Button className="mt-4">
+            Contact For Query
+          </Button>
         </Link>
       </div>
     </MaxWidthWrapper>

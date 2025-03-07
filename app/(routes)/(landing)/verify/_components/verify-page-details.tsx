@@ -113,15 +113,10 @@ const VerifyKycPageDetails = () => {
     queryFn: async () => {
       if (!user?.clerkId) throw new Error("User ID is required");
       const response = await api(user.clerkId).get(`/kyc/getdetails`);
-      if (response.status !== 200) {
+      if (response.status !== 200)
         toast.error({
           text: response.data.message || "Failed to fetch KYC details",
         });
-      } else {
-        toast.success({
-          text: "Your KYC details on under review",
-        });
-      }
       return response.data;
     },
   });
@@ -186,7 +181,7 @@ const VerifyKycPageDetails = () => {
   }
 
   if (kycData?.data.kycStatus === "APPLIED") {
-    return <WaitingScreen />;
+    return <WaitingScreen />
   }
 
   if (!user) {
