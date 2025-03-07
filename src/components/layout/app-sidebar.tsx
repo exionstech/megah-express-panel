@@ -57,8 +57,7 @@ export const company = {
 export default function AppSidebar() {
   const pathname = usePathname();
     const { signOut } = useClerk();
-    const router = useRouter();
-    const { user, isLoading } = useUser();
+    const { user } = useUser();
   return (
     <Sidebar collapsible='icon'>
       <SidebarHeader>
