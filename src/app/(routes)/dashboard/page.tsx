@@ -1,30 +1,19 @@
-"use client"
 
-import LoaderPage from '@/components/shared/loader'
-import { useUser } from '@/hooks/use-user'
-import { Loader } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import { SearchParams } from 'nuqs/server';
+import DashboardPageDetails from './_components/dashboard-page-details'
+
+export const metadata = {
+  title: 'Dashboard | Megha Express Panle'
+};
+
+
+type pageProps = {
+  searchParams: Promise<SearchParams>;
+};
 
 const DashboardPage = () => {
-  const router = useRouter()
-  const { user, isLoading } = useUser()
-
-  useEffect(() => {
-    if (user?.kycStatus === "PENDING") {
-      router.replace('/verify')
-    }
-  }, [user, router])
-
-
-  if (isLoading) {
-    return (
-     <LoaderPage/>
-    )
-  }
-
   return (
-    <div>DashboardPage</div>
+    <DashboardPageDetails />
   )
 }
 

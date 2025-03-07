@@ -6,7 +6,7 @@ import { X, File, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useUploadThing } from "@/utils/upload-helper";
-import CustomIcon from "../shared/custom-icon";
+import CustomIcon from "./custom-icon";
 
 type EndpointKey = keyof OurFileRouter;
 

@@ -23,10 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Image from "next/image";
-import CustomIcon from "@/components/shared/custom-icon";
+import CustomIcon from "@/app/(routes)/(landing)/verify/_components/custom-icon";
 import { Loader2, Save, CircleX } from "lucide-react";
 import { PhoneInput } from "@/components/ui/phone-number-input";
-import ImageUploader from "@/components/common/file-upload-zone";
+import ImageUploader from "./file-upload-zone";
 import WaitingScreen from "./waiting-screen";
 
 const kycFormSchema = z.object({
@@ -65,14 +65,15 @@ const VerifyKycPageDetails = () => {
   const router = useRouter();
   const { user, isLoading } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showWaitingScreen, setShowWaitingScreen] = useState(false);
 
   const form = useForm<KycFormValues>({
     resolver: zodResolver(kycFormSchema),
     defaultValues: {
-      profilePhoto: user?.avatar || "",
+      profilePhoto: "",
       phone: "",
-      name: user?.name || "",
-      email: user?.email || "",
+      name: "",
+      email: "",
       aadhaarNumber: "",
       aadhaarFront: "",
       aadhaarBack: "",
@@ -91,20 +92,27 @@ const VerifyKycPageDetails = () => {
     },
   });
 
-  if (isLoading) {
-    return <LoaderPage />;
-  }
-
+  // Check if user has already applied for KYC
   useEffect(() => {
-    if (!user) {
+    if (!isLoading && user) {
+      if (user.kycStatus === "APPLIED") {
+        setShowWaitingScreen(true);
+      } else {
+        setShowWaitingScreen(false);
+        // Update form values with user data
+        form.setValue("name", user.name || "");
+        form.setValue("email", user.email || "");
+        form.setValue("profilePhoto", user.avatar || "");
+      }
+    }
+  }, [user, isLoading, form]);
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!isLoading && !user) {
       router.replace("/onboarding");
     }
-    if (!isLoading && user) {
-      form.setValue("name", user.name || "");
-      form.setValue("email", user.email || "");
-      form.setValue("profilePhoto", user.avatar || "");
-    }
-  }, [user, isLoading, router, form]);
+  }, [user, isLoading, router]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: KycFormValues) => {
@@ -141,10 +149,10 @@ const VerifyKycPageDetails = () => {
     },
     onSuccess: () => {
       setIsSubmitting(false);
+      setShowWaitingScreen(true);
       toast.success({
         text: "KYC verification submitted successfully",
       });
-      return <WaitingScreen />;
     },
     onError: (error) => {
       setIsSubmitting(false);
@@ -159,15 +167,17 @@ const VerifyKycPageDetails = () => {
     mutate(data);
   };
 
-  if (user?.kycStatus === "APPLIED") {
+  if (isLoading) {
+    return <LoaderPage />;
+  }
+
+  if (showWaitingScreen) {
     return <WaitingScreen />;
   }
 
   if (!user) {
-    return null;
+    return <LoaderPage />;
   }
-
-  console.log(user);
 
   return (
     <MaxWidthWrapper className="min-h-screen py-6">
@@ -198,6 +208,7 @@ const VerifyKycPageDetails = () => {
                       size="icon"
                       variant="ghost"
                       className="absolute top-1 right-1 h-8 w-8 bg-brandred hover:bg-brandred/80"
+                      onClick={() => form.setValue("profilePhoto", "")}
                     >
                       <CircleX className="h-5 w-5" color="white" />
                     </Button>
