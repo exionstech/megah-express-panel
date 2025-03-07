@@ -5,16 +5,16 @@ import Link from "next/link";
 
 export default function LandingDetails() {
   return (
-    <div className="flex sm:min-h-[85.5vh] min-h-[82vh] flex-col sm:items-center justify-center text-center px-2 sm:py-8 py-12">
-      <h1 className="text-[2.4rem] leading-10 sm:leading-[4.5rem] font-bold mb-4 sm:text-6xl text-left sm:text-center">
+    <div className="w-full max-w-screen-2xl mx-auto px-5 md:px-14 py-10 md:min-h-screen h-[80vh] 2xl:aspect-[5/2] 2xl:min-h-fit flex flex-col justify-center items-center">
+      <h1 className="text-[2.4rem] leading-10 sm:leading-[4.5rem] font-bold mb-4 sm:text-6xl text-center">
         Megah Express Panel Dashboard
       </h1>
-      <p className="mb-8 sm:text-lg max-w-[800px] text-muted-foreground text-left sm:text-center">
+      <p className="mb-8 sm:text-lg max-w-[800px] text-muted-foreground text-center">
         Megha Express is a logistics company that provides a simple and
         efficient way to ship your products. Our API is designed to help you
         integrate our services into your platform.
       </p>
-      <div className="sm:flex sm:flex-row grid grid-cols-2 items-center sm;gap-5 gap-3 mb-8">
+      <div className="">
         <Link
           href={"/waiting"}
           className={
