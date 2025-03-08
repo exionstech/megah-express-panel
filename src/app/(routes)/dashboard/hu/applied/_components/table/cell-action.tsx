@@ -24,19 +24,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { user } = useUser();
-
   const queryClient = useQueryClient();
-
-  if (!user) return null;
 
   const { mutate: deleteUser, isPending } = useMutation({
     mutationFn: async (id: string) => {
+      if (!user) return;
       await ApiInstance(user.clerkId).post("/auth/delete", { id });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getappliedusers"] });
       toast.success({
-        text: "KYC Applied User deleted",
+        text: "KYC Verified User deleted",
       });
       setOpen(false);
     },
@@ -45,6 +43,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     deleteUser(data.id);
   };
+
+  // If no user, render nothing after all hooks have been called
+  if (!user) return null;
 
   return (
     <>
@@ -66,11 +67,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/product/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
