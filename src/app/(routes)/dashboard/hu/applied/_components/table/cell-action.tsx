@@ -8,7 +8,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Product } from "@/constants/data";
 import { useUser } from "@/hooks/use-user";
 import ApiInstance from "@/lib/api";
 import { toast } from "@pheralb/toast";
@@ -35,9 +34,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       await ApiInstance(user.clerkId).post("/auth/delete", { id });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getverifiedusers"] });
+      queryClient.invalidateQueries({ queryKey: ["getappliedusers"] });
       toast.success({
-        text: "KYC Verified User deleted",
+        text: "KYC Applied User deleted",
       });
       setOpen(false);
     },
