@@ -8,7 +8,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Product } from "@/constants/data";
 import { useUser } from "@/hooks/use-user";
 import ApiInstance from "@/lib/api";
 import { toast } from "@pheralb/toast";
@@ -25,13 +24,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { user } = useUser();
-
   const queryClient = useQueryClient();
 
-  if (!user) return null;
 
   const { mutate: deleteUser, isPending } = useMutation({
     mutationFn: async (id: string) => {
+      if (!user) return;
       await ApiInstance(user.clerkId).post("/auth/delete", { id });
     },
     onSuccess: () => {
@@ -46,6 +44,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     deleteUser(data.id);
   };
+
+
+  if (!user) return null;
 
   return (
     <>
@@ -66,12 +67,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/product/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
