@@ -12,7 +12,7 @@ import { useUser } from "@/hooks/use-user";
 import ApiInstance from "@/lib/api";
 import { toast } from "@pheralb/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { DownloadCloud, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -34,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getappliedusers"] });
       toast.success({
-        text: "KYC Verified User deleted",
+        text: "KYC Applied User deleted",
       });
       setOpen(false);
     },
@@ -43,6 +43,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     deleteUser(data.id);
   };
+
+  const viewDocs = () => {
+    router.push(`/dashboard/hu/${data.id}`);
+  }
 
   // If no user, render nothing after all hooks have been called
   if (!user) return null;
@@ -69,6 +73,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Delete
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={viewDocs}>
+            <DownloadCloud className="mr-2 h-4 w-4" /> View Documents
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
