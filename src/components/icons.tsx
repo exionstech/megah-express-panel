@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   ArrowRight,
+  Box,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -23,12 +24,17 @@ import {
   Pizza,
   Plus,
   Settings,
+  ShieldUser,
   SunMedium,
   Trash,
   Twitter,
   User,
   UserCircle2Icon,
   UserPen,
+  UserRoundCheck,
+  UserRoundCog,
+  UserRoundSearch,
+  UserRoundX,
   UserX2Icon,
   X
 } from 'lucide-react';
@@ -64,6 +70,12 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  box: Box,
+  shieldUser: ShieldUser,
+  userRoundSearch:UserRoundSearch,
+  userRounX: UserRoundX,
+  userroundCog: UserRoundCog,
+  userRoundCheck: UserRoundCheck,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden='true'

@@ -38,7 +38,9 @@ import {
   ChevronsUpDown,
   CreditCard,
   GalleryVerticalEnd,
-  LogOut
+  LogOut,
+  Settings,
+  ShieldUser
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -47,27 +49,34 @@ import { Icons } from '../icons';
 import { useUser } from '@/hooks/use-user';
 import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const company = {
-  name: 'Acme Inc',
-  logo: GalleryVerticalEnd,
-  plan: 'Enterprise'
+  name: 'Megha Express',
+  logo: ShieldUser
 };
 
 export default function AppSidebar() {
   const pathname = usePathname();
-    const { signOut } = useClerk();
-    const { user } = useUser();
+  const { signOut } = useClerk();
+  const { user, isLoading } = useUser();
   return (
     <Sidebar collapsible='icon'>
       <SidebarHeader>
         <div className='flex gap-2 py-2 text-sidebar-accent-foreground'>
-          <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
-            <company.logo className='size-4' />
+        <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
+            <company.logo className='size-5 shrink-0' />
           </div>
           <div className='grid flex-1 text-left text-sm leading-tight'>
             <span className='truncate font-semibold'>{company.name}</span>
-            <span className='truncate text-xs'>{company.plan}</span>
+            {
+              isLoading || !user ? (
+                <Skeleton className='w-24 h-3 !rounded-sm bg-gray-400/40 mt-1' />
+              ) : (
+                <span className='truncate text-xs uppercase'>{user?.role}</span>
+              )
+            }
           </div>
         </div>
       </SidebarHeader>
@@ -97,18 +106,24 @@ export default function AppSidebar() {
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={pathname === subItem.url}
-                            >
-                              <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
+                        {item.items?.map((subItem) => {
+                          const Icon = subItem.icon
+                            ? Icons[subItem.icon]
+                            : Icons.logo;
+                          return (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={pathname === subItem.url}
+                              >
+                                <Link href={subItem.url}>
+                                  {item.icon && <Icon />}
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          )
+                        })}
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   </SidebarMenuItem>
@@ -146,7 +161,7 @@ export default function AppSidebar() {
                       alt={user?.name || ''}
                     />
                     <AvatarFallback className='rounded-lg'>
-                      {user?.name?.slice(0, 2)?.toUpperCase() || 'CN'}
+                      {user?.name?.slice(0, 2)?.toUpperCase() || 'ME'}
                     </AvatarFallback>
                   </Avatar>
                   <div className='grid flex-1 text-left text-sm leading-tight'>
@@ -175,7 +190,7 @@ export default function AppSidebar() {
                       />
                       <AvatarFallback className='rounded-lg'>
                         {user?.name?.slice(0, 2)?.toUpperCase() ||
-                          'CN'}
+                          'ME'}
                       </AvatarFallback>
                     </Avatar>
                     <div className='grid flex-1 text-left text-sm leading-tight'>
@@ -193,13 +208,13 @@ export default function AppSidebar() {
 
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <BadgeCheck />
-                    Account
+                    <Settings className='size-4 shrink-0 mr-1' />
+                    Settings
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
-                  <LogOut />
+                  <LogOut className='size-4 shrink-0 mr-1' />
                   Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>

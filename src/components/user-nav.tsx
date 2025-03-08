@@ -97,7 +97,7 @@ export function UserNav({ avtarBig }: UserNavProps) {
               Home
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => router.push("/dashboard/mybookings")}
+              onClick={() => router.push("/dashboard")}
             >
               Dashboard
             </DropdownMenuItem>
