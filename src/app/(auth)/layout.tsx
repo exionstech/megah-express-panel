@@ -5,12 +5,12 @@ import Link from "next/link";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-    title: "Authentication | Megha Express",
+  title: "Authentication | Megha Express",
 };
 
 const Layout = ({ children }: { children: ReactNode }) => {
-    return (
-        <section className="w-full h-full flex overflow-hidden">
+  return (
+    <section className="w-full h-full flex md:flex-row flex-col overflow-hidden">
             <div className="w-1/2 hidden md:flex relative h-full flex-col  text-white dark:border-r lg:flex bg-muted min-h-screen auth-bg px-6 py-5">
                 <div className="auth-bg absolute inset-0" />
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-black to-transparent opacity-50" />
@@ -36,12 +36,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
                     </blockquote>
                 </div>
             </div>
-            <div className="w-1/2 h-full min-h-screen flex items-center justify-center relative overflow-hidden">
+            <div className="md:w-1/2 w-full h-full min-h-screen flex items-center justify-center relative overflow-hidden">
                 <BackgroundPattern className="absolute inset-0 left-1/2 z-0 -translate-x-1/2 opacity-75 dark:opacity-50" />
                 {children}
             </div>
         </section>
-    );
+  );
 };
 
 export default Layout;
