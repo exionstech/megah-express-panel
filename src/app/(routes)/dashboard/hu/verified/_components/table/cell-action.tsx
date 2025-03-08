@@ -46,6 +46,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   };
   if (!user) return null;
 
+  const viewDocs = () => {
+    router.push(`/dashboard/hu/${data.id}`);
+  };
+
   return (
     <>
       <AlertModal
