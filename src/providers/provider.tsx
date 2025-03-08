@@ -5,6 +5,7 @@ import { HTTPException } from "hono/http-exception"
 import { ThemeProvider } from "next-themes"
 import { PropsWithChildren, useState } from "react"
 import ToasterNextTheme from "./toast-provider"
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 export const Providers = ({ children }: PropsWithChildren) => {
 
@@ -29,16 +30,18 @@ export const Providers = ({ children }: PropsWithChildren) => {
     )
 
     return <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-            
-        >
-            {children}
-            <ToasterNextTheme />
-        </ThemeProvider>
+        <NuqsAdapter>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="light"
+                enableSystem
+                disableTransitionOnChange
+
+            >
+                {children}
+                <ToasterNextTheme />
+            </ThemeProvider>
+        </NuqsAdapter>
 
     </QueryClientProvider>
 }

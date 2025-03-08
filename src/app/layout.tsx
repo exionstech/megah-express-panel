@@ -3,7 +3,7 @@ import { Space_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Providers } from "@/providers/provider";
-
+import NextTopLoader from 'nextjs-toploader';
 
 const sansFont = Space_Grotesk({
   subsets: ["latin"],
@@ -42,6 +42,7 @@ export default function RootLayout({
           className={`${sansFont.variable} ${monoFont.variable} font-regular antialiased tracking-wide`}
           suppressHydrationWarning
         >
+          <NextTopLoader showSpinner={false} color="#6366f1" />
           <Providers
           >
             <main className="w-full overflow-x-hidden h-auto scroll-smooth">

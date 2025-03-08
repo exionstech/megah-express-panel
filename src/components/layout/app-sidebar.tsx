@@ -39,7 +39,8 @@ import {
   CreditCard,
   GalleryVerticalEnd,
   LogOut,
-  Settings
+  Settings,
+  ShieldUser
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -53,7 +54,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export const company = {
   name: 'Megha Express',
-  logo: "./fav.svg",
+  logo: ShieldUser
 };
 
 export default function AppSidebar() {
@@ -64,8 +65,8 @@ export default function AppSidebar() {
     <Sidebar collapsible='icon'>
       <SidebarHeader>
         <div className='flex gap-2 py-2 text-sidebar-accent-foreground'>
-          <div className='flex items-center justify-center rounded-lg text-sidebar-primary-foreground'>
-            <Image src={company.logo} alt={company.name} width={32} height={32} className='object-cover select-none w-10 ml-3 md:ml-1' />
+        <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
+            <company.logo className='size-5 shrink-0' />
           </div>
           <div className='grid flex-1 text-left text-sm leading-tight'>
             <span className='truncate font-semibold'>{company.name}</span>

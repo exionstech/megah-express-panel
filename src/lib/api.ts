@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://127.0.0.1:8080";
 
-const createApi = (authorization: string) => {
+const ApiInstance = (authorization: string) => {
   return axios.create({
     baseURL: `${API_URL}/api`,
     headers: {
@@ -12,4 +12,4 @@ const createApi = (authorization: string) => {
   });
 };
 
-export default createApi;
+export default ApiInstance;

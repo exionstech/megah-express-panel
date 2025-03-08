@@ -19,7 +19,7 @@ type KycDocuments = {
 type User = {
   id: string;
   clerkId: string;
-  anem: string;
+  name: string;
   email: string;
   mobile: string;
   avatar: string;
