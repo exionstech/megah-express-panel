@@ -30,26 +30,26 @@ export const navItems: NavItem[] = [
     items: [
       {
         title: "Verified",
-        url: "/dashboard/hc/verified",
+        url: "/dashboard/hu/verified",
         icon: "userRoundCheck",
         shortcut: ["v", "c"],
       },
       {
         title: "Applied",
         shortcut: ["a", "c"],
-        url: "/dashboard/hc/applied",
+        url: "/dashboard/hu/applied",
         icon: "userRoundSearch",
       },
       {
         title: "Pending",
         shortcut: ["p", "c"],
-        url: "/dashboard/hc/pending",
+        url: "/dashboard/hu/pending",
         icon: "userroundCog",
       },
       {
         title: "Rejected",
         shortcut: ["r", "c"],
-        url: "/dashboard/hc/rejected",
+        url: "/dashboard/hu/rejected",
         icon: "userRounX",
       },
     ],
