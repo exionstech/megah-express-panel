@@ -12,7 +12,7 @@ import { useUser } from "@/hooks/use-user";
 import ApiInstance from "@/lib/api";
 import { toast } from "@pheralb/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { DownloadCloud, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -44,8 +44,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     deleteUser(data.id);
   };
-
-
   if (!user) return null;
 
   return (
@@ -69,6 +67,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Delete
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={viewDocs}>
+            <DownloadCloud className="mr-2 h-4 w-4" /> View Documents
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

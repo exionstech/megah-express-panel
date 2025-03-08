@@ -48,7 +48,6 @@ export default function AppliedUsersListingPage({
       return data;
     },
   });
-  console.log(response);
 
   const users = response?.data?.users;
 

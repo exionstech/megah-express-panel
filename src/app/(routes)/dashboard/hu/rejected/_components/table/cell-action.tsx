@@ -12,7 +12,7 @@ import { useUser } from "@/hooks/use-user";
 import ApiInstance from "@/lib/api";
 import { toast } from "@pheralb/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { DownloadCloud, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -24,19 +24,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { user } = useUser();
-
   const queryClient = useQueryClient();
-
-  if (!user) return null;
 
   const { mutate: deleteUser, isPending } = useMutation({
     mutationFn: async (id: string) => {
+      if (!user) return;
       await ApiInstance(user.clerkId).post("/auth/delete", { id });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getrejectedusers"] });
       toast.success({
-        text: "KYC Pending User deleted",
+        text: "KYC Rejected User deleted",
       });
       setOpen(false);
     },
@@ -45,6 +43,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     deleteUser(data.id);
   };
+
+  const viewDocs = () => {
+    router.push(`/dashboard/hu/${data.id}`);
+  };
+
+  // If no user, render nothing after all hooks have been called
+  if (!user) return null;
 
   return (
     <>
@@ -66,13 +71,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/product/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Delete
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={viewDocs}>
+            <DownloadCloud className="mr-2 h-4 w-4" /> View Documents
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
