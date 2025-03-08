@@ -24,10 +24,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { user } = useUser();
-
   const queryClient = useQueryClient();
 
-  if (!user) return null;
 
   const { mutate: deleteUser, isPending } = useMutation({
     mutationFn: async (id: string) => {
@@ -46,12 +44,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     deleteUser(data.id);
   };
-
-  const viewDocs = () => {
-    router.push(`/dashboard/hu/${data.id}`);
-  };
-
-  // If no user, render nothing after all hooks have been called
   if (!user) return null;
 
   return (
@@ -73,12 +65,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/product/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
