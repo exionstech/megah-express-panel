@@ -21,27 +21,39 @@ export const navItems: NavItem[] = [
     shortcut: ['d', 'd'],
     items: [] // Empty array as there are no child items for Dashboard
   },
-  // {
-  //   title: 'Account',
-  //   url: '#', // Placeholder as there is no direct link for the parent
-  //   icon: 'billing',
-  //   isActive: true,
+  {
+    title: 'Hub Creators',
+    url: '#',
+    icon: 'box',
+    isActive: true,
 
-  //   items: [
-  //     {
-  //       title: 'Profile',
-  //       url: '/dashboard/profile',
-  //       icon: 'userPen',
-  //       shortcut: ['m', 'm']
-  //     },
-  //     {
-  //       title: 'Login',
-  //       shortcut: ['l', 'l'],
-  //       url: '/',
-  //       icon: 'login'
-  //     }
-  //   ]
-  // },
+    items: [
+      {
+        title: 'Verified',
+        url: '/dashboard/creators/verified',
+        icon: 'userRoundCheck',
+        shortcut: ['v', 'c']
+      },
+      {
+        title: 'Applied',
+        shortcut: ['a', 'c'],
+        url: '/dashboard/creators/applied',
+        icon: 'userRoundSearch'
+      },
+      {
+        title: 'Pending',
+        shortcut: ['p', 'c'],
+        url: '/dashboard/creators/pending',
+        icon: 'userroundCog'
+      },
+      {
+        title: 'Rejected',
+        shortcut: ['r', 'c'],
+        url: '/dashboard/creators/rejected',
+        icon: 'userRounX'
+      },
+    ]
+  },
 ];
 
 export interface SaleUser {
