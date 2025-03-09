@@ -3,7 +3,60 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
-import { formatedString } from "@/lib/utils";
+import KycStatusSwitcher from "../../../_components/kyc-status-switcher";
+import { useUser } from "@/hooks/use-user";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ApiInstance from "@/lib/api";
+import { toast } from "@pheralb/toast";
+
+const useKycStatusMutation = (clerkId: string | undefined) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      userId: string;
+      kycStatus: "APPROVED" | "REJECTED";
+    }) => {
+      if (!clerkId) throw new Error("User not authenticated");
+      const res = await ApiInstance(clerkId).post("/kyc/update", data);
+      if (res.status !== 200)
+        throw new Error("Failed to update KYC status");
+      const json = res.data;
+      if (!json.success)
+        throw new Error(json.message || "Failed to update KYC status");
+      return json;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getpendingusers"] });
+      toast.success({
+        text: "KYC status updated successfully",
+      });
+    },
+    onError: (error: Error) => {
+      toast.error({
+        text: error.message || "Failed to update KYC status",
+      });
+    },
+  });
+};
+
+
+const KycStatusCell = ({ userId, currentStatus }: { userId: string, currentStatus: string }) => {
+  const { user } = useUser();
+  const { mutate, isPending } = useKycStatusMutation(user?.clerkId);
+
+  const handleStatusChange = (userId: string, newStatus: "APPROVED" | "REJECTED") => {
+    mutate({ userId, kycStatus: newStatus });
+  };
+
+  return (
+    <KycStatusSwitcher
+      userId={userId}
+      currentStatus={currentStatus}
+      onStatusChange={handleStatusChange}
+      isLoading={isPending}
+    />
+  );
+};
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -47,9 +100,9 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       return (
         <div className="min-w-[120px] flex items-center">
-        <span className="flex items-center">
-          {(row.original.name)}
-        </span>
+          <span className="flex items-center">
+            {(row.original.name)}
+          </span>
         </div>
       );
     },
@@ -70,15 +123,25 @@ export const columns: ColumnDef<User>[] = [
     header: "MOBILE",
     cell: ({ row }) => {
       return (
-        <span className="flex items-center">
+        <div className="flex items-center min-w-[110px]">
           {row.original.mobile === null || row.original.mobile === undefined ? (
             <span className="italic">null</span>
           ) : (
             row.original.mobile
           )}
-        </span>
+        </div>
       );
     },
+  },
+  {
+    accessorKey: "kycStatus",
+    header: "KYC STATUS",
+    cell: ({ row }) => (
+      <KycStatusCell
+        userId={row.original.id}
+        currentStatus={row.original.kycStatus}
+      />
+    ),
   },
   {
     accessorKey: "createdAt",

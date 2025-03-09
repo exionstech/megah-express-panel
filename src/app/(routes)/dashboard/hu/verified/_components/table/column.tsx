@@ -51,7 +51,7 @@ const KycStatusCell = ({ userId, currentStatus }: { userId: string, currentStatu
 
   if (currentStatus === "PENDING" || currentStatus === "APPLIED") {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 min-w-[120px]">
         <svg
           width="8"
           height="8"
@@ -141,13 +141,13 @@ export const columns: ColumnDef<User>[] = [
     header: "MOBILE",
     cell: ({ row }) => {
       return (
-        <span className="flex items-center">
+        <div className="flex items-center min-w-[110px]">
           {row.original.mobile === null || row.original.mobile === undefined ? (
             <span className="italic">null</span>
           ) : (
             row.original.mobile
           )}
-        </span>
+        </div>
       );
     },
   },
